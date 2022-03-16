@@ -1,0 +1,22 @@
+h1 {
+  color: blue;
+}
+
+.buttons {
+  width: 150px;
+  display: flex;
+  justify-content: space-around;
+}
+
+.stats {
+  margin-left: 15px;
+}
+
+.stats td span {
+  font-weight: bolder;
+  color: blue;
+}
+
+.hideView {
+  display: none;
+}
