@@ -1,17 +1,13 @@
 import { useState } from 'react'
-
-const Info = (props) => <li>{props.name} / {props.phone}</li>
+import AllNumbers from './components/Display'
+import Search from './components/Search'
+import Form from './components/Form'
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', phone: '415-230-7789'},
-  ]) 
-  const [newPerson, setNewPerson] = useState(
-    { name: '', phone: ''}
-  )
+  const [persons, setPersons] = useState([{ name: 'Arto Hellas', phone: '415-230-7789'},]) 
+  const [newPerson, setNewPerson] = useState({ name: '', phone: ''})
   const [ searchTerm, setSearchTerm ] = useState('')
 
-    
   const addContact = (event) => {
     event.preventDefault();
     let found = persons.findIndex(person => person.name === newPerson.name);
@@ -48,36 +44,15 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
-      <div>
-        <input 
-          placeholder='search contacts'
-          onChange={handleSearchChange}
-        />
-      </div>
+      <Search callback={handleSearchChange}/>
       <h2>Add New:</h2>
-      <form onSubmit={addContact}>
-        <div>
-          name: <input 
-            id="name"
-            value={newPerson.name}
-            onChange={handleFormChange}
-          />
-        </div>
-        <div>
-          phone: <input
-            id="phone" 
-            value={newPerson.phone}
-            onChange={handleFormChange}
-          />
-        </div>
-        <div>
-          <button type="submit">add</button>
-        </div>
-      </form>
+      <Form 
+        addContact={addContact} 
+        handleFormChange={handleFormChange}
+        newPerson={newPerson}
+        />
       <h2>Numbers</h2>
-      <ul>
-        {contactsToShow.map(person => <Info key={person.name} name={person.name} phone={person.phone}/>)}
-      </ul>
+      <AllNumbers contacts={contactsToShow} />
     </div>
   )
 }
