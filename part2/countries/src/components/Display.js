@@ -2,11 +2,11 @@ import React from 'react';
 import Countries from './Countries';
 import Single from './Single';
 
-const Display = ({ countries }) => {
+const Display = ({ countries, showCallBack }) => {
   if (countries.length > 10) {
     return <p>Too many matches, please be more specific</p>
   } else if (countries.length > 1 && countries.length <= 10) {
-    return <Countries countries={countries}/>
+    return <Countries countries={countries} showCallBack={showCallBack}/>
   } else if (countries.length === 1) {
     return <Single country={countries[0]}/>
   } else {

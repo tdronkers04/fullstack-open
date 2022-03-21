@@ -1,11 +1,18 @@
 import React from 'react';
 
-const Countries = ({ countries }) => {
+const Button = ({ showCallBack }) => {
+  return (
+    <button onClick={showCallBack}>show</button>
+  )
+}
+
+const Countries = ({ countries, showCallBack }) => {
   return (
     <ul>
       {
         countries.map(country => 
-          <li key={country.ccn3}>{country.name.official}</li>
+          <li key={country.ccn3} id={country.name.official}>{country.name.official} 
+            <Button showCallBack={showCallBack}/></li>
         )
       }
     </ul>

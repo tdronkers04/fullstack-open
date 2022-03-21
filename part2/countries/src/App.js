@@ -31,16 +31,21 @@ const App = () => {
     setMatchingCountries(matches);
   }
 
-  const handleSearchChange = async (event) => {
+  const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);  
   }
 
   useEffect(updateMatches, [allCountries, searchTerm]); // HOW DOES THIS WORK?
 
+  const showCallBack = (event) => {
+    let country = event.target.parentElement.id;
+    setSearchTerm(country);
+  }
+
   return (
-    <div>
+    <div id="mainContainer">
       <Search callback={handleSearchChange} />
-      <Display countries={matchingCountries}/>
+      <Display countries={matchingCountries} showCallBack={showCallBack}/>
     </div>
   )
 }
