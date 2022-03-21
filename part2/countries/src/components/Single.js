@@ -3,37 +3,31 @@ import axios from 'axios';
 const api_key = process.env.REACT_APP_API_KEY;
 
 const Single = ({ country }) => {
-  const pStyle = {fontSize: '200px', marginTop: 0}
-  const [ captialCoordinates, setCoordinates ] = useState({})
-  const [ weather, setWeather ] = useState({});
-
-  const coordinatesHook = () => {
-    axios
-      .get(`http://api.openweathermap.org/geo/1.0/direct?q=${country.capital + ',' + country.cca2}&appid=${api_key}`)
-      .then(response => {
-        if (response.status === 200) {
-          let { lat, lon } = response.data[0];
-          setCoordinates({ lat, lon});
-        } else {
-          alert('Something went wrong with the API call...')
-        } 
-      });
-  }
-
-  const weatherHook = () => {
-    axios
-      .get(`https://api.openweathermap.org/data/2.5/weather?lat=${captialCoordinates.lat}&lon=${captialCoordinates.lon}&appid=${api_key}&units=imperial`)
-      .then(response => {
-        if (response.status === 200) {
-          let data = response.data;
-          setWeather({description: data.weather[0].description, temp: data.main.temp});
-        } else {
-          alert('Something went wrong with the API call...')
-        }
-      })
-  }
-  useEffect(coordinatesHook, [country]);
-  useEffect(weatherHook, [captialCoordinates]);
+  const weatherStyle = {margin: 0}
+  const pStyle = {fontSize: '200px', margin: 0}
+  const [ weather, setWeather ] = useState({description: null, temp: null, icon: null});
+  
+  useEffect(() => {
+    async function getWeather() {
+      let coordinates;
+      let weatherData;
+      
+      try {
+        coordinates = await axios.get(`http://api.openweathermap.org/geo/1.0/direct?q=${country.capital + ',' + country.cca2}&appid=${api_key}`).then(response => response.data)
+        weatherData = await axios.get(`https://api.openweathermap.org/data/2.5/weather?lat=${coordinates[0].lat}&lon=${coordinates[0].lon}&appid=${api_key}&units=imperial`).then(response => response.data);
+        setWeather({
+          description: weatherData.weather[0].description,
+          temp: weatherData.main.temp,
+          windSpeed: weatherData.wind.speed,
+          icon: weatherData.weather[0].icon,
+        });
+      
+      } catch {
+        alert("Something went wrong with the API call...");
+      } 
+    }
+    getWeather()
+  }, [country]);
 
   return (
     <div>
@@ -51,9 +45,12 @@ const Single = ({ country }) => {
         }
       </ul>
       <p style={pStyle}>{country.flag}</p>
-      <h2>Weather in {country.capital[0]}</h2>
-      <p>description: {weather.description} </p>
-      <p>temperature: {weather.temp} fahrenheit</p>
+      <div style={weatherStyle}>
+        <h2>Weather in {country.capital[0]}</h2>
+        <p>Current Temperature: {weather.temp} F</p>
+        <p>Wind: {weather.windSpeed} m/second</p>
+        <img src={`http://openweathermap.org/img/wn/${weather.icon}@2x.png`} alt="current weather"></img>
+      </div>
     </div>
   )
 }
