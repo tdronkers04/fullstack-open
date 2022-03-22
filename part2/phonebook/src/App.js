@@ -1,33 +1,56 @@
-import axios from 'axios'
 import { useEffect, useState } from 'react'
 import AllNumbers from './components/Display'
 import Search from './components/Search'
 import Form from './components/Form'
+import contacts from './services/contacts'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newPerson, setNewPerson] = useState({ name: '', phone: ''})
   const [ searchTerm, setSearchTerm ] = useState('')
 
-  const hook = () => {
-    axios
-      .get('http://localhost:3001/persons')
-      .then(response => {
-        setPersons(response.data);
-      });
-  }
-
-  useEffect(hook, []);
+  useEffect(() => {
+    contacts
+      .getAll()
+      .then(contacts => setPersons(contacts))
+      .catch(error => {
+        console.log(error.message)
+        alert('Something went wrong. Please try again later')
+      })
+  }, [])
 
   const addContact = (event) => {
     event.preventDefault();
     let found = persons.findIndex(person => person.name === newPerson.name);
+
     if (found !== -1) {
-      alert(`${newPerson.name} already exists in the phonebook!`)
-      setNewPerson({ name: '', phone: ''})
+      let contactId = persons[found].id;
+      let answer = window.confirm(`${newPerson.name} already exists in the phonebook. Replace the old number with the new number?`)
+
+      if (answer) {
+        contacts
+          .updateContact(contactId, newPerson)
+          .then(updatedContact => {
+            setPersons(persons.map(person => person.id !== contactId ? person : updatedContact))
+            setNewPerson({ name: '', phone: ''})
+          })
+          .catch(error => {
+            console.log(error.message)
+            alert('Something went wrong. Please try again later')
+          })
+      }
+      
     } else {
-      setPersons(persons.concat([newPerson]));
-      setNewPerson({ name: '', phone: ''})
+      contacts
+        .create(newPerson)
+        .then(newContact => {
+          setPersons(persons.concat(newContact))
+          setNewPerson({ name: '', phone: ''})
+        })
+        .catch(error => {
+          console.log(error.message)
+          alert('Something went wrong. Please try again later')
+        })
     }
   }
 
@@ -41,6 +64,27 @@ const App = () => {
 
   const handleSearchChange = (event) => {
     setSearchTerm(event.target.value);
+  }
+
+  const handleDelete = (event) => {
+    const contactId = parseInt(event.target.parentElement.id);
+    const contactName = persons.find(person => person.id === contactId).name
+    let answer = window.confirm(`Are you sure you want to delete contact ${contactName}?`);
+    
+    if (answer) {
+      contacts
+        .deleteContact(contactId)
+        .then(status => {
+          if (status === 200) {
+            setPersons(persons.filter(person => person.id !== contactId))
+            alert(`${contactName} successfully delete`)
+          }
+        })
+        .catch(error => {
+          console.log(error.message)
+          alert('Something went wrong. Please try again later')
+        })
+    }
   }
 
   const contactsToShow = persons.filter(person => {
@@ -63,7 +107,7 @@ const App = () => {
         newPerson={newPerson}
         />
       <h2>Numbers</h2>
-      <AllNumbers contacts={contactsToShow} />
+      <AllNumbers contacts={contactsToShow} callback={handleDelete}/>
     </div>
   )
 }

@@ -2,7 +2,7 @@
   "persons": [
     {
       "name": "Arto Hellas",
-      "phone": "040-123456",
+      "phone": "215-999-8742",
       "id": 1
     },
     {
@@ -16,13 +16,8 @@
       "id": 3
     },
     {
-      "name": "Mary Poppendieck",
-      "phone": "39-23-6423122",
-      "id": 4
-    },
-    {
       "name": "Tim Dronkers",
-      "phone": "1-720-320-4580",
+      "phone": "720-320-4580",
       "id": 5
     }
   ]
