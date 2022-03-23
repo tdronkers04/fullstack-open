@@ -2,20 +2,33 @@ import { useEffect, useState } from 'react'
 import AllNumbers from './components/Display'
 import Search from './components/Search'
 import Form from './components/Form'
+import Notification from './components/Notification'
 import contacts from './services/contacts'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newPerson, setNewPerson] = useState({ name: '', phone: ''})
   const [ searchTerm, setSearchTerm ] = useState('')
+  const [ notification, setNotification ] = useState({type: null, message: null})
 
   useEffect(() => {
     contacts
       .getAll()
-      .then(contacts => setPersons(contacts))
+      .then(contacts => {
+        setPersons(contacts)
+        setNotification({
+          type: 'success',
+          message: "Contacts successfully loaded from server"
+        })
+        setTimeout(() => {
+          setNotification({type: null, message: null})
+        }, 5000)
+      })
       .catch(error => {
-        console.log(error.message)
-        alert('Something went wrong. Please try again later')
+        setNotification({
+          type: 'error',
+          message: `Error: ${error.message}. Please try again later`,
+        })
       })
   }, [])
 
@@ -33,10 +46,19 @@ const App = () => {
           .then(updatedContact => {
             setPersons(persons.map(person => person.id !== contactId ? person : updatedContact))
             setNewPerson({ name: '', phone: ''})
+            setNotification({
+              type: 'success',
+              message: 'Contact updated successfully'
+            })
+            setTimeout(() => {
+              setNotification({type: null, message: null})
+            }, 5000)
           })
           .catch(error => {
-            console.log(error.message)
-            alert('Something went wrong. Please try again later')
+            setNotification({
+              type: 'error',
+              message: `Error: ${error.message}. Please try again later`,
+            })
           })
       }
       
@@ -46,10 +68,19 @@ const App = () => {
         .then(newContact => {
           setPersons(persons.concat(newContact))
           setNewPerson({ name: '', phone: ''})
+          setNotification({
+            type: 'success',
+            message: 'New contact added successfully'
+          })
+          setTimeout(() => {
+            setNotification({type: null, message: null})
+          }, 5000)
         })
         .catch(error => {
-          console.log(error.message)
-          alert('Something went wrong. Please try again later')
+          setNotification({
+            type: 'error',
+            message: `Error: ${error.message}. Please try again later`,
+          })
         })
     }
   }
@@ -77,12 +108,20 @@ const App = () => {
         .then(status => {
           if (status === 200) {
             setPersons(persons.filter(person => person.id !== contactId))
-            alert(`${contactName} successfully delete`)
+            setNotification({
+              type: 'success',
+              message: 'Contact deleted successfully'
+            })
+            setTimeout(() => {
+              setNotification({type: null, message: null})
+            }, 5000)
           }
         })
         .catch(error => {
-          console.log(error.message)
-          alert('Something went wrong. Please try again later')
+          setNotification({
+            type: 'error',
+            message: `Error: ${error.message}. Please try again later`,
+          })
         })
     }
   }
@@ -99,6 +138,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification notification={notification}/>
       <Search callback={handleSearchChange}/>
       <h2>Add New:</h2>
       <Form 
