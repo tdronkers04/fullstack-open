@@ -3,7 +3,7 @@ const baseUrl = 'http://localhost:3001/notes'
 
 const getAll = () => {
   let request = axios.get(baseUrl)
-  const nonExisting = {
+  const nonExisting = { // dummy record to force error
     id: 10000,
     content: 'hello world 123456',
     date: 'x',
