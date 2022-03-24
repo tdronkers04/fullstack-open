@@ -4,8 +4,8 @@ const Delete = ({ callback }) => {
   return <button onClick={callback}>Delete</button>
 }
 
-const Info = ({ name, phone, id, callback }) => {
-  return <li id={id}>{name} / {phone} <Delete callback={callback}/></li>
+const Info = ({ name, number, id, callback }) => {
+  return <li id={id}>{name} / {number} <Delete callback={callback}/></li>
 } 
 const AllNumbers = ({ contacts, callback }) => {
   return (
@@ -15,7 +15,7 @@ const AllNumbers = ({ contacts, callback }) => {
           <Info 
             key={contact.name}
             name={contact.name}
-            phone={contact.phone}
+            number={contact.number}
             id={contact.id}
             callback={callback}
           />

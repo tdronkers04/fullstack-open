@@ -13,7 +13,7 @@ const Form = ({ addContact, handleFormChange, newPerson }) => {
         <div>
           phone: <input
             id="phone" 
-            value={newPerson.phone}
+            value={newPerson.number}
             onChange={handleFormChange}
           />
         </div>

@@ -7,7 +7,7 @@ import contacts from './services/contacts'
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
-  const [newPerson, setNewPerson] = useState({ name: '', phone: ''})
+  const [newPerson, setNewPerson] = useState({ name: '', number: ''})
   const [ searchTerm, setSearchTerm ] = useState('')
   const [ notification, setNotification ] = useState({type: null, message: null})
 
@@ -45,7 +45,7 @@ const App = () => {
           .updateContact(contactId, newPerson)
           .then(updatedContact => {
             setPersons(persons.map(person => person.id !== contactId ? person : updatedContact))
-            setNewPerson({ name: '', phone: ''})
+            setNewPerson({ name: '', number: ''})
             setNotification({
               type: 'success',
               message: 'Contact updated successfully'
@@ -67,7 +67,7 @@ const App = () => {
         .create(newPerson)
         .then(newContact => {
           setPersons(persons.concat(newContact))
-          setNewPerson({ name: '', phone: ''})
+          setNewPerson({ name: '', number: ''})
           setNotification({
             type: 'success',
             message: 'New contact added successfully'
@@ -89,7 +89,7 @@ const App = () => {
     if (event.target.id === 'name') {
       setNewPerson(Object.assign({}, newPerson, {name: event.target.value}))
     } else {
-      setNewPerson(Object.assign({}, newPerson, {phone: event.target.value}))
+      setNewPerson(Object.assign({}, newPerson, {number: event.target.value}))
     }
   }
 
@@ -106,7 +106,7 @@ const App = () => {
       contacts
         .deleteContact(contactId)
         .then(status => {
-          if (status === 200) {
+          if (status === 204) {
             setPersons(persons.filter(person => person.id !== contactId))
             setNotification({
               type: 'success',
