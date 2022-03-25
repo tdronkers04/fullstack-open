@@ -57,7 +57,7 @@ const App = () => {
           .catch(error => {
             setNotification({
               type: 'error',
-              message: `Error: ${error.message}. Please try again later`,
+              message: error.response.data.error,
             })
           })
       }
@@ -79,7 +79,7 @@ const App = () => {
         .catch(error => {
           setNotification({
             type: 'error',
-            message: `Error: ${error.message}. Please try again later`,
+            message: error.response.data.error
           })
         })
     }
@@ -120,7 +120,7 @@ const App = () => {
         .catch(error => {
           setNotification({
             type: 'error',
-            message: `Error: ${error.message}. Please try again later`,
+            message: error.response.data.error,
           })
         })
     }
