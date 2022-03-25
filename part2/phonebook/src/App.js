@@ -98,7 +98,7 @@ const App = () => {
   }
 
   const handleDelete = (event) => {
-    const contactId = parseInt(event.target.parentElement.id);
+    const contactId = event.target.parentElement.id;
     const contactName = persons.find(person => person.id === contactId).name
     let answer = window.confirm(`Are you sure you want to delete contact ${contactName}?`);
     
