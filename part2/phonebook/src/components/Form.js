@@ -8,6 +8,7 @@ const Form = ({ addContact, handleFormChange, newPerson }) => {
             id="name"
             value={newPerson.name}
             onChange={handleFormChange}
+            placeholder="Big Bird"
           />
         </div>
         <div>
@@ -15,6 +16,7 @@ const Form = ({ addContact, handleFormChange, newPerson }) => {
             id="phone" 
             value={newPerson.number}
             onChange={handleFormChange}
+            placeholder="111-222-3333"
           />
         </div>
         <div>
