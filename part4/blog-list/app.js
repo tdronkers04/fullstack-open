@@ -1,11 +1,10 @@
 const express = require('express')
 const cors = require('cors')
+const mongoose = require('mongoose')
 const config = require('./utilities/config')
 const logger = require('./utilities/logger')
 const middleware = require('./utilities/middleware')
-const mongoose = require('mongoose')
 const listRouter = require('./controllers/list')
-
 
 logger.info('connecting to', config.MONGODB_URI)
 
