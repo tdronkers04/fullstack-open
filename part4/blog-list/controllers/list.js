@@ -6,9 +6,11 @@ listRouter.get('/', async (req, res) => {
   res.json(result)
 })
 
-// listRouter.get('/:id', (req, res) => {
-
-// })
+listRouter.get('/:id', async (req, res) => {
+  let id = req.params.id
+  const result = await Blog.findById(id)
+  res.json(result)
+})
 
 listRouter.post('/', async (req, res) => {
   const body = req.body
@@ -27,12 +29,25 @@ listRouter.post('/', async (req, res) => {
   }
 })
 
-// listRouter.delete('/', (req, res) => {
+listRouter.delete('/:id', async (req, res, next) => {
+  try {
+    await Blog.findByIdAndRemove(req.params.id)
+    res.status(204).end()
+  } catch (error) {
+    next(error)
+  }
+})
 
-// })
-
-// listRouter.put('/:id', (req, res) => {
-
-// })
+listRouter.put('/:id', async (req, res, next) => {
+  let id = req.params.id
+  let data = req.body
+  
+  try {
+    let result = await Blog.findByIdAndUpdate(id, data, { new: true, runValidators: true, context: 'query' })
+    res.json(result)
+  } catch(error) {
+    next(error)
+  }
+})
 
 module.exports = listRouter

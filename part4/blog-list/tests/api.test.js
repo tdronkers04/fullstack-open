@@ -103,6 +103,30 @@ test('POST request without title AND url properties results in 400 Bad Request',
     .expect(400)
 })
 
+test('delete a blog', async () => {
+  let blogs = await api.get('/api/blogs')
+  let wesbosID = blogs.body.find(obj => obj.author === 'Wes Bos').id
+  
+  api.delete(`/api/blogs/${wesbosID}`)
+    .expect(204)
+})
+
+test('update like count for blog post', async () => {
+  let blogs = await api.get('/api/blogs')
+  let wesbosID = blogs.body.find(obj => obj.author === 'Wes Bos').id
+  const updateLikes = {
+    likes: 6000000
+  }
+  api.put(`/api/blogs/${wesbosID}`)
+    .send(updateLikes)
+    .expect(200)
+
+  let wesbos = await api.get(`/api/blogs/${wesbosID}`)
+  console.log(wesbos.body)
+  let wesbosLikes = wesbos.body.likes
+  expect(wesbosLikes).toBe(6000000)
+})
+
 afterAll(() => {
   mongoose.connection.close()
 })
