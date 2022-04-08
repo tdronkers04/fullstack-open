@@ -2,14 +2,7 @@ const jwt = require('jsonwebtoken')
 const listRouter = require('express').Router()
 const Blog = require('../models/list')
 const User = require('../models/user')
-
-const getTokenFrom = request => {
-  const auth = request.get('authorization')
-  if (auth && auth.toLowerCase().startsWith('bearer')) {
-    return auth.substring(7)
-  }
-  return null
-}
+const middleware = require('../utilities/middleware')
 
 listRouter.get('/', async (req, res) => {
   const result = await Blog
@@ -24,15 +17,14 @@ listRouter.get('/:id', async (req, res) => {
   res.json(result)
 })
 
-listRouter.post('/', async (req, res) => {
+listRouter.post('/', middleware.userIdExtractor, async (req, res) => {
   const body = req.body
-  const token = getTokenFrom(req)
-  const decodedToken = jwt.verify(token, process.env.SECRET)
-  
-  if (!decodedToken.id) {
-    return res.status(401).json({ error: 'token missing or invalid' })
+    
+  if (!req.userid) {
+    return res.status(401).json({ error: 'invalid user' })
   }
-  const user = await User.findById(decodedToken.id)
+  
+  const user = await User.findById(req.userid)
 
   const blog = new Blog({
     title: body.title,
@@ -52,12 +44,22 @@ listRouter.post('/', async (req, res) => {
   }
 })
 
-listRouter.delete('/:id', async (req, res, next) => {
-  try {
-    await Blog.findByIdAndRemove(req.params.id)
-    res.status(204).end()
-  } catch (error) {
-    next(error)
+listRouter.delete('/:id', middleware.userIdExtractor, async (req, res, next) => {
+  if (!req.userid) {
+    return res.status(401).json({ error: 'invalid user' })
+  }
+
+  const blog = await Blog.findById(req.params.id)
+  
+  if (req.userid === blog.user.toString()) {  
+    try {
+      await Blog.findByIdAndRemove(req.params.id)
+      res.status(204).end()
+    } catch (error) {
+      next(error)
+    }
+  } else {
+    res.status(401).json({ error: 'blog can only be deleted by the user that added it'})
   }
 })
 
