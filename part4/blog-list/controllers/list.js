@@ -71,7 +71,11 @@ listRouter.delete('/:id', middleware.userIdExtractor, async (req, res, next) => 
   }
 })
 
-listRouter.put('/:id', async (req, res, next) => {
+listRouter.put('/:id', middleware.userIdExtractor, async (req, res, next) => {
+  if (!req.userid) {
+    return res.status(401).json({ error: 'invalid user' })
+  }
+  
   let id = req.params.id
   let data = req.body
   

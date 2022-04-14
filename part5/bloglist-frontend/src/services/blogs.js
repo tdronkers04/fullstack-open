@@ -19,10 +19,21 @@ const createBlog = (newBlog) => {
   return request.then(response => response.data)
 }
 
+const likeBlog = (blogObj) => {
+  let authToken = JSON.parse(window.localStorage.getItem("loggedInUser"))["token"]
+  const request = axios.put(
+    `${baseUrl}/${blogObj.id}`,
+    blogObj, {
+      headers: {"Authorization" : `Bearer ${authToken}`}
+    })
+    return request.then(response => response.data)
+}
+
 const blogService = {
   getAll,
   getUserBlogs,
-  createBlog
+  createBlog,
+  likeBlog
 }
 
 export default blogService

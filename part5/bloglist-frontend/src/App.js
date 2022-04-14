@@ -83,6 +83,36 @@ const App = () => {
     }
   }
 
+  const handleLike = async (blogObj) => {
+    try {
+      const result = await blogService.likeBlog(blogObj)
+      const updatedBlogs = blogs.map(blog => {
+        if (blog.id === result.id) {
+          return result
+        } else {
+          return blog
+        }
+      })
+      setBlogs(updatedBlogs)
+      setNotification({
+        type: "success",
+        message: "like added!"
+      })
+      setTimeout(() => {
+        setNotification({type: null, message: null})
+      }, 5000)
+    } catch(error) {
+      console.error(error.message)
+      setNotification({
+        type: "error",
+        message: "somethig went wrong. Please try again later"
+      })
+      setTimeout(() => {
+        setNotification({type: null, message: null})
+      }, 5000)
+    }
+  }
+
   const handleLogout = (event) => {
     window.localStorage.removeItem('loggedInUser')
     setUser(null)
@@ -126,7 +156,9 @@ const App = () => {
       </div>
       <br></br>
       <div>
-        {blogs ? blogs.map(blog => <Blog key={blog.id} blog={blog}/>) : null}
+        {blogs ? 
+          blogs.map(blog => <Blog key={blog.id} blog={blog} putLike={handleLike}/>) 
+          : null}
       </div>
     </div>
   )
