@@ -1,36 +1,33 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
-  const [newTitle, setNewTitle] = useState('')
-  const [newAuthor, setNewAuthor] = useState('')
-  const [newUrl, setNewUrl] = useState('')
+  const [ blogs, setBlogs ] = useState([])
+  const [ username, setUsername ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ user, setUser ] = useState(null)
+  const [ newTitle, setNewTitle ] = useState('')
+  const [ newAuthor, setNewAuthor ] = useState('')
+  const [ newUrl, setNewUrl ] = useState('')
+  const [ notification, setNotification ] = useState({type: null, message: null})
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedInUserJSON) {
       const user = JSON.parse(loggedInUserJSON)
       setUser(user)
-      // blogService.setToken(user.token) // method not yet implemented!
     }
   }, [])
   
   useEffect(() => {
-    // blogService.getAll().then(blogs =>
-    //   setBlogs( blogs )
-    // ) 
     if (user) {
       blogService.getUserBlogs(user.id).then(blogs => {
         setBlogs(blogs)
       }) 
     }
-    
   }, [user])
 
   const handleLogin = async (event) => {
@@ -45,8 +42,22 @@ const App = () => {
       setUser(user)
       setUsername('')
       setPassword('')
+      setNotification({
+        type: "success",
+        message: "successful login operation!"
+      })
+      setTimeout(() => {
+        setNotification({type: null, message: null})
+      }, 5000)
     } catch (error) {
-      console.log(error.message)
+      console.error(error.message)
+      setNotification({
+        type: "error",
+        message: "incorrect username or password"
+      })
+      setTimeout(() => {
+        setNotification({type: null, message: null})
+      }, 5000)
     }
   }
 
@@ -64,8 +75,22 @@ const App = () => {
       setNewTitle('')
       setNewAuthor('')
       setNewUrl('')
+      setNotification({
+        type: "success",
+        message: "new blog successfully saved!"
+      })
+      setTimeout(() => {
+        setNotification({type: null, message: null})
+      }, 5000)
     } catch (error) {
       console.error(error.message)
+      setNotification({
+        type: "error",
+        message: "somethig went wrong. Please try again later"
+      })
+      setTimeout(() => {
+        setNotification({type: null, message: null})
+      }, 5000)
     }
   }
 
@@ -78,6 +103,7 @@ const App = () => {
     return (
       <div>
         <h2>Log in to application</h2>
+        <Notification notification={notification} />
         <form onSubmit={handleLogin}>
           <div>
             username: 
@@ -98,6 +124,7 @@ const App = () => {
   return (
     <div>
       <h2>blogs</h2>
+      <Notification notification={notification} />
       <div>
         <h4>{user.username} logged in
         <button onClick={handleLogout}>logout</button>
