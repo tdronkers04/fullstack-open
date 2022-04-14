@@ -6,7 +6,14 @@ const getAll = () => {
   return request.then(response => response.data)
 }
 
+const getUserBlogs = (userId) => {
+  const request = axios.get(`${baseUrl}/${userId}`)
+  return request.then(response => response.data)
+}
+
 const blogService = {
   getAll,
+  getUserBlogs
 }
+
 export default blogService

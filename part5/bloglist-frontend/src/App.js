@@ -19,10 +19,16 @@ const App = () => {
   }, [])
   
   useEffect(() => {
-    blogService.getAll().then(blogs =>
-      setBlogs( blogs )
-    )  
-  }, [])
+    // blogService.getAll().then(blogs =>
+    //   setBlogs( blogs )
+    // ) 
+    if (user) {
+      blogService.getUserBlogs(user.id).then(blogs => {
+        setBlogs(blogs)
+      }) 
+    }
+    
+  }, [user])
 
   const handleLogin = async (event) => {
     event.preventDefault()
@@ -77,7 +83,7 @@ const App = () => {
         </h4>
         
       </div>
-      {blogs.map(blog => <Blog key={blog.id} blog={blog}/>)}
+       {blogs ? blogs.map(blog => <Blog key={blog.id} blog={blog}/>) : null}
     </div>
   )
 }
