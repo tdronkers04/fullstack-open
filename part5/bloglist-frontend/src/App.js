@@ -13,11 +13,6 @@ const App = () => {
   const [ user, setUser ] = useState(null)
   const [ notification, setNotification ] = useState({type: null, message: null})
 
-  const [ newTitle, setNewTitle ] = useState('')
-  const [ newAuthor, setNewAuthor ] = useState('')
-  const [ newUrl, setNewUrl ] = useState('')
-  
-
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
     if (loggedInUserJSON) {
@@ -65,20 +60,10 @@ const App = () => {
     }
   }
 
-  const handleCreate = async (event) => {
-    event.preventDefault()
-    const newBlog = {
-      title: newTitle,
-      author: newAuthor,
-      url: newUrl
-    }
-
+  const handleCreate = async (blogObject) => {
     try {
-      const result = await blogService.createBlog(newBlog)
+      const result = await blogService.createBlog(blogObject)
       setBlogs(blogs.concat(result))
-      setNewTitle('')
-      setNewAuthor('')
-      setNewUrl('')
       setNotification({
         type: "success",
         message: "new blog successfully saved!"
@@ -136,15 +121,7 @@ const App = () => {
       </div>
       <div>
         <Toggleable buttonLabel='new blog'>
-          <CreateBlogForm 
-            handleSubmit={handleCreate} 
-            handleNewTitle={({ target }) => setNewTitle(target.value)}
-            handleNewAuthor={({ target }) => setNewAuthor(target.value)}
-            handleNewUrl={({ target }) => setNewUrl(target.value)}
-            newTitle={newTitle}
-            newAuthor={newAuthor}
-            newUrl={newUrl}
-          />
+          <CreateBlogForm createBlog={handleCreate}/>
         </Toggleable>
       </div>
       <br></br>
