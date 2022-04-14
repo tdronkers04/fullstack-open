@@ -11,9 +11,17 @@ listRouter.get('/', async (req, res) => {
   res.json(result)
 })
 
-listRouter.get('/:id', async (req, res) => {
-  let id = req.params.id
-  const result = await Blog.findById(id)
+// OLD get blog post by blog post id
+// listRouter.get('/:id', async (req, res) => {
+//   let id = req.params.id
+//   const result = await Blog.findById(id)
+//   res.json(result)
+// })
+
+// NEW get blog posts by user id
+listRouter.get('/:userId', async (req, res) => {
+  let userId = req.params.userId
+  const result = await Blog.find({ user: userId })
   res.json(result)
 })
 
