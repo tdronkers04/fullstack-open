@@ -1,5 +1,7 @@
 import { useState, useEffect } from 'react'
 import Blog from './components/Blog'
+import CreateBlogForm from './components/CreateBlogForm'
+import Toggleable from './components/Toggleable'
 import Notification from './components/Notification'
 import blogService from './services/blogs'
 import loginService from './services/login'
@@ -9,10 +11,12 @@ const App = () => {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
+  const [ notification, setNotification ] = useState({type: null, message: null})
+
   const [ newTitle, setNewTitle ] = useState('')
   const [ newAuthor, setNewAuthor ] = useState('')
   const [ newUrl, setNewUrl ] = useState('')
-  const [ notification, setNotification ] = useState({type: null, message: null})
+  
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
@@ -130,27 +134,23 @@ const App = () => {
         <button onClick={handleLogout}>logout</button>
         </h4>
       </div>
-      <h2>create new</h2>
-      <form onSubmit={handleCreate}>
-          <div>
-            title: 
-              <input type="text" value={newTitle} name="title" 
-                onChange={({ target }) => setNewTitle(target.value)} required/>
-          </div>
-          <div>
-            author: 
-              <input type="text" value={newAuthor} name="author" 
-                onChange={({ target }) => setNewAuthor(target.value)} required/>
-          </div>
-          <div>
-            url:  
-              <input type="text" value={newUrl} name="url" 
-                onChange={({ target }) => setNewUrl(target.value)} required/>
-          </div>
-          <button type="submit">create</button>
-        </form>
-        <br></br>
-       {blogs ? blogs.map(blog => <Blog key={blog.id} blog={blog}/>) : null}
+      <div>
+        <Toggleable buttonLabel='new blog'>
+          <CreateBlogForm 
+            handleSubmit={handleCreate} 
+            handleNewTitle={({ target }) => setNewTitle(target.value)}
+            handleNewAuthor={({ target }) => setNewAuthor(target.value)}
+            handleNewUrl={({ target }) => setNewUrl(target.value)}
+            newTitle={newTitle}
+            newAuthor={newAuthor}
+            newUrl={newUrl}
+          />
+        </Toggleable>
+      </div>
+      <br></br>
+      <div>
+        {blogs ? blogs.map(blog => <Blog key={blog.id} blog={blog}/>) : null}
+      </div>
     </div>
   )
 }
