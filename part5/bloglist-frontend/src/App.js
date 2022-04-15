@@ -107,17 +107,16 @@ const App = () => {
       let confirm = window.confirm("Are you sure you want to delete this blog?")
       if (confirm) {
         const result = await blogService.deleteBlog(blogId)
-        if (result.status === 204) {
-          const updatedBlogs = blogs.filter(blog => blog.id !== blogId)
-          setBlogs(updatedBlogs) // why is this not triggering a re-render?
+        if (result === 204) {
+          setBlogs(blogs.filter(blog => blog.id !== blogId))
+          setNotification({
+            type: "success",
+            message: "blog successfully deleted"
+          })
+          setTimeout(() => {
+            setNotification({type: null, message: null})
+          }, 5000)
         }
-        setNotification({
-          type: "success",
-          message: "blog successfully deleted"
-        })
-        setTimeout(() => {
-          setNotification({type: null, message: null})
-        }, 5000)
       }
     } catch(error) {
       console.error(error.message)
