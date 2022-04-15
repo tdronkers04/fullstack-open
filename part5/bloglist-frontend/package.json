@@ -40,6 +40,7 @@
   },
   "proxy": "http://localhost:3003",
   "devDependencies": {
-    "eslint-plugin-jest": "^26.1.4"
+    "eslint-plugin-jest": "^26.1.4",
+    "jest-watch-typeahead": "^0.6.5"
   }
 }

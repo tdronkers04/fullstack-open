@@ -35,18 +35,15 @@ const CreateBlogForm = ({ createBlog }) => {
       <h2>create new</h2>
       <form onSubmit={addBlog}>
         <div>
-          title:
-          <input type="text" value={newTitle} name="title"
+          <input type="text" value={newTitle} name="title" placeholder='title'
             onChange={handleTitleChange} required/>
         </div>
         <div>
-          author:
-          <input type="text" value={newAuthor} name="author"
+          <input type="text" value={newAuthor} name="author" id="author" placeholder='author'
             onChange={handleAuthorChange} required/>
         </div>
         <div>
-          url:
-          <input type="text" value={newUrl} name="url"
+          <input type="text" value={newUrl} name="url" id="url" placeholder='url'
             onChange={handleUrlChange} required/>
         </div>
         <button type="submit">create</button>
