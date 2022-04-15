@@ -11,7 +11,7 @@ const App = () => {
   const [ username, setUsername ] = useState('')
   const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
-  const [ notification, setNotification ] = useState({type: null, message: null})
+  const [ notification, setNotification ] = useState({ type: null, message: null })
 
   const formRef = useRef()
 
@@ -22,12 +22,12 @@ const App = () => {
       setUser(user)
     }
   }, [])
-  
+
   useEffect(() => {
     if (user) {
       blogService.getUserBlogs(user.id).then(blogs => {
         setBlogs(blogs)
-      }) 
+      })
     }
   }, [user])
 
@@ -44,20 +44,20 @@ const App = () => {
       setUsername('')
       setPassword('')
       setNotification({
-        type: "success",
-        message: "successful login operation!"
+        type: 'success',
+        message: 'successful login operation!'
       })
       setTimeout(() => {
-        setNotification({type: null, message: null})
+        setNotification({ type: null, message: null })
       }, 5000)
     } catch (error) {
       console.error(error.message)
       setNotification({
-        type: "error",
-        message: "incorrect username or password"
+        type: 'error',
+        message: 'incorrect username or password'
       })
       setTimeout(() => {
-        setNotification({type: null, message: null})
+        setNotification({ type: null, message: null })
       }, 5000)
     }
   }
@@ -68,20 +68,20 @@ const App = () => {
       setBlogs(blogs.concat(result))
       formRef.current.toggleVisibility()
       setNotification({
-        type: "success",
-        message: "new blog successfully saved!"
+        type: 'success',
+        message: 'new blog successfully saved!'
       })
       setTimeout(() => {
-        setNotification({type: null, message: null})
+        setNotification({ type: null, message: null })
       }, 5000)
     } catch (error) {
       console.error(error.message)
       setNotification({
-        type: "error",
-        message: "somethig went wrong. Please try again later"
+        type: 'error',
+        message: 'somethig went wrong. Please try again later'
       })
       setTimeout(() => {
-        setNotification({type: null, message: null})
+        setNotification({ type: null, message: null })
       }, 5000)
     }
   }
@@ -104,33 +104,33 @@ const App = () => {
 
   const handleDelete = async (blogId) => {
     try {
-      let confirm = window.confirm("Are you sure you want to delete this blog?")
+      let confirm = window.confirm('Are you sure you want to delete this blog?')
       if (confirm) {
         const result = await blogService.deleteBlog(blogId)
         if (result === 204) {
           setBlogs(blogs.filter(blog => blog.id !== blogId))
           setNotification({
-            type: "success",
-            message: "blog successfully deleted"
+            type: 'success',
+            message: 'blog successfully deleted'
           })
           setTimeout(() => {
-            setNotification({type: null, message: null})
+            setNotification({ type: null, message: null })
           }, 5000)
         }
       }
     } catch(error) {
       console.error(error.message)
       setNotification({
-        type: "error",
-        message: "somethig went wrong. Please try again later"
+        type: 'error',
+        message: 'somethig went wrong. Please try again later'
       })
       setTimeout(() => {
-        setNotification({type: null, message: null})
+        setNotification({ type: null, message: null })
       }, 5000)
     }
   }
 
-  const handleLogout = (event) => {
+  const handleLogout = () => {
     window.localStorage.removeItem('loggedInUser')
     setUser(null)
   }
@@ -142,14 +142,14 @@ const App = () => {
         <Notification notification={notification} />
         <form onSubmit={handleLogin}>
           <div>
-            username: 
-              <input type="text" value={username} name="Username" 
-                onChange={({ target }) => setUsername(target.value)}/>
+            username:
+            <input type="text" value={username} name="Username"
+              onChange={({ target }) => setUsername(target.value)}/>
           </div>
           <div>
-            password: 
-              <input type="password" value={password} name="Password" 
-                onChange={({ target }) => setPassword(target.value)}/>
+            password:
+            <input type="password" value={password} name="Password"
+              onChange={({ target }) => setPassword(target.value)}/>
           </div>
           <button type="submit">login</button>
         </form>
@@ -163,7 +163,7 @@ const App = () => {
       <Notification notification={notification} />
       <div>
         <h4>{user.username} logged in
-        <button onClick={handleLogout}>logout</button>
+          <button onClick={handleLogout}>logout</button>
         </h4>
       </div>
       <div>
@@ -173,9 +173,9 @@ const App = () => {
       </div>
       <br></br>
       <div>
-        {blogs ? 
+        {blogs ?
           blogs.sort((a, b) => a.likes < b.likes)
-            .map(blog => <Blog key={blog.id} blog={blog} putLike={handleLike} deleteBlog={handleDelete}/>) 
+            .map(blog => <Blog key={blog.id} blog={blog} putLike={handleLike} deleteBlog={handleDelete}/>)
           : null}
       </div>
     </div>
