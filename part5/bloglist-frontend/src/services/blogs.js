@@ -29,11 +29,21 @@ const likeBlog = (blogObj) => {
     return request.then(response => response.data)
 }
 
+const deleteBlog = (blogId) => {
+  let authToken = JSON.parse(window.localStorage.getItem("loggedInUser"))["token"]
+  const request = axios.delete(
+    `${baseUrl}/${blogId}`, {
+      headers: {"Authorization" : `Bearer ${authToken}`}
+    })
+    return request.then(response => response.status)
+}
+
 const blogService = {
   getAll,
   getUserBlogs,
   createBlog,
-  likeBlog
+  likeBlog,
+  deleteBlog
 }
 
 export default blogService

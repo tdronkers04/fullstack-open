@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import CreateBlogForm from './components/CreateBlogForm'
 import Toggleable from './components/Toggleable'
@@ -12,6 +12,8 @@ const App = () => {
   const [ password, setPassword ] = useState('')
   const [ user, setUser ] = useState(null)
   const [ notification, setNotification ] = useState({type: null, message: null})
+
+  const formRef = useRef()
 
   useEffect(() => {
     const loggedInUserJSON = window.localStorage.getItem('loggedInUser')
@@ -64,6 +66,7 @@ const App = () => {
     try {
       const result = await blogService.createBlog(blogObject)
       setBlogs(blogs.concat(result))
+      formRef.current.toggleVisibility()
       setNotification({
         type: "success",
         message: "new blog successfully saved!"
@@ -94,13 +97,28 @@ const App = () => {
         }
       })
       setBlogs(updatedBlogs)
-      setNotification({
-        type: "success",
-        message: "like added!"
-      })
-      setTimeout(() => {
-        setNotification({type: null, message: null})
-      }, 5000)
+    } catch(error) {
+      console.error(error.message)
+    }
+  }
+
+  const handleDelete = async (blogId) => {
+    try {
+      let confirm = window.confirm("Are you sure you want to delete this blog?")
+      if (confirm) {
+        const result = await blogService.deleteBlog(blogId)
+        if (result.status === 204) {
+          const updatedBlogs = blogs.filter(blog => blog.id !== blogId)
+          setBlogs(updatedBlogs) // why is this not triggering a re-render?
+        }
+        setNotification({
+          type: "success",
+          message: "blog successfully deleted"
+        })
+        setTimeout(() => {
+          setNotification({type: null, message: null})
+        }, 5000)
+      }
     } catch(error) {
       console.error(error.message)
       setNotification({
@@ -150,14 +168,15 @@ const App = () => {
         </h4>
       </div>
       <div>
-        <Toggleable buttonLabel='new blog'>
+        <Toggleable buttonLabel='new blog' ref={formRef}>
           <CreateBlogForm createBlog={handleCreate}/>
         </Toggleable>
       </div>
       <br></br>
       <div>
         {blogs ? 
-          blogs.map(blog => <Blog key={blog.id} blog={blog} putLike={handleLike}/>) 
+          blogs.sort((a, b) => a.likes < b.likes)
+            .map(blog => <Blog key={blog.id} blog={blog} putLike={handleLike} deleteBlog={handleDelete}/>) 
           : null}
       </div>
     </div>
