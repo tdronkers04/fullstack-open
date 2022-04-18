@@ -28,7 +28,7 @@ const Blog = ({ blog, putLike, deleteBlog }) => {
   }
 
   return (
-    <div style={blogStyle}>
+    <div id={blog.title} style={blogStyle}>
       <div style={hideWhenVisible} className="hiddenState">
         <p>
           {blog.title}
