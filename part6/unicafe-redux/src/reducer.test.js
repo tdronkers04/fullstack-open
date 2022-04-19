@@ -41,8 +41,9 @@ describe('unicafe reducer', () => {
 
     deepFreeze(state)
     let newState = counterReducer(state, action)
-    newState = counterReducer(newState, action)
-    expect(newState).toEqual({
+    deepFreeze(newState)
+    let newState2 = counterReducer(newState, action)
+    expect(newState2).toEqual({
       good: 0,
       ok: 0,
       bad: 2

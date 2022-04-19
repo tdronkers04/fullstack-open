@@ -48,4 +48,8 @@ const renderApp = () => {
 }
 
 renderApp()
-store.subscribe(renderApp)
+store.subscribe(renderApp) // render app component every time there is an update to the store
+store.subscribe(() => {
+  const storeNow = store.getState()
+  console.log('Store Updated: ', storeNow)
+})
