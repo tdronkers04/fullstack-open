@@ -1,18 +1,18 @@
 import { useSelector, useDispatch } from "react-redux";
-import { voteAction } from '../reducers/anecdoteReducer'
+import { voteAnecdote } from '../reducers/anecdoteReducer'
 
 const AnecdoteList = (props) => {
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdotes)
+  const sortedArray = anecdotes.slice().sort((a, b) => a.votes < b.votes)
   const dispatch = useDispatch()
 
   const vote = (id) => {
-    dispatch(voteAction(id))
+    dispatch(voteAnecdote(id))
   }
 
   return (
     <div>
-      {anecdotes
-        .sort((a, b) => a.votes < b.votes)
+      {sortedArray
         .map(anecdote =>
           <div key={anecdote.id}>
             <div>
