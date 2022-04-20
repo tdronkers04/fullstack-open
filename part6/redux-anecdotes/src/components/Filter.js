@@ -1,7 +1,12 @@
+import { useDispatch } from "react-redux"
+import { updateFilter } from "../reducers/filterReducer"
+
 const FilterForm = (prop) => {
+  const dispatch = useDispatch()
+  
   const filterSelected = (event) => {
     const content = event.target.value
-    console.log(content)
+    dispatch(updateFilter(content))
   }
   
   return(
