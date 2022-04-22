@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { voteAnecdote } from '../reducers/anecdoteReducer'
+import { updateVoteAction } from "../reducers/anecdoteReducer";
 import { updateNotification } from "../reducers/notificationReducer";
 
 const AnecdoteList = (props) => {
@@ -9,10 +9,14 @@ const AnecdoteList = (props) => {
   const filteredAnecdotes = allAnecdotes.filter(anecdote => anecdote.content.includes(filterTerm))
   const sortedArray = filteredAnecdotes.slice().sort((a, b) => a.votes < b.votes)
   
-  const vote = (id) => {
-    let anecdoteContent = filteredAnecdotes.find(anecdote => anecdote.id === id).content.slice(0, 30)
-    dispatch(voteAnecdote(id))
-    dispatch(updateNotification(`Your vote for "${anecdoteContent}..." has been receieved`))
+  const vote = (anecdote) => {
+    const changedAnecdote = {
+      ...anecdote,
+      votes: anecdote.votes + 1
+    }
+
+    dispatch(updateVoteAction(changedAnecdote))
+    dispatch(updateNotification(`Your vote for "${changedAnecdote.content.slice(0, 30)}..." has been receieved`))
   }
 
   return (
@@ -25,7 +29,7 @@ const AnecdoteList = (props) => {
             </div>
             <div>
               has {anecdote.votes}
-              <button onClick={() => vote(anecdote.id)}>vote</button>
+              <button onClick={() => vote(anecdote)}>vote</button>
             </div>
             <br></br>
           </div>
