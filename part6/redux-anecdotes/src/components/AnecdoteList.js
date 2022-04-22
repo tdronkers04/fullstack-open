@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { updateVoteAction } from "../reducers/anecdoteReducer";
-import { updateNotification } from "../reducers/notificationReducer";
+import { notificationAction } from "../reducers/notificationReducer";
 
 const AnecdoteList = (props) => {
   const dispatch = useDispatch()
@@ -16,7 +16,7 @@ const AnecdoteList = (props) => {
     }
 
     dispatch(updateVoteAction(changedAnecdote))
-    dispatch(updateNotification(`Your vote for "${changedAnecdote.content.slice(0, 30)}..." has been receieved`))
+    dispatch(notificationAction(`Your vote for "${changedAnecdote.content.slice(0, 30)}..." has been receieved`, 5000))
   }
 
   return (
